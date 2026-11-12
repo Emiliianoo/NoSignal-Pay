@@ -81,3 +81,13 @@ def make_user(db: Session):
         return user
 
     return _make_user
+
+
+@pytest.fixture
+def client(db: Session):
+    """HTTP client for the real app, on a freshly emptied test database."""
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    return TestClient(app)
