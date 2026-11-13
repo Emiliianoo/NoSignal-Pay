@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.core.errors import register_error_handlers
-from app.routers import auth, health, users
+from app.routers import auth, health, users, wallet
 
 API_PREFIX = "/api/v1"
 
@@ -12,3 +12,4 @@ register_error_handlers(app)
 app.include_router(health.router, prefix=API_PREFIX)
 app.include_router(auth.router, prefix=API_PREFIX)
 app.include_router(users.router, prefix=API_PREFIX)
+app.include_router(wallet.router, prefix=API_PREFIX)

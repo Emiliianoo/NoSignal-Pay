@@ -1,6 +1,8 @@
 """Dependencies shared by routers."""
 
-from fastapi import Depends
+from typing import Annotated
+
+from fastapi import Depends, Header
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
@@ -26,3 +28,26 @@ def get_current_user(
     if user is None:
         raise ApiError(401, "not_authenticated", "Invalid token.")
     return user
+
+
+IDEMPOTENCY_KEY_MIN_LENGTH = 8
+IDEMPOTENCY_KEY_MAX_LENGTH = 128
+
+
+def get_idempotency_key(
+    idempotency_key: Annotated[str | None, Header(alias="Idempotency-Key")] = None,
+) -> str:
+    """Required on every endpoint that moves money. Any text of 8 to 128 characters.
+
+    It is not forced to be a UUID: offline payments will later use "allowance_id:counter".
+    """
+    if idempotency_key is None:
+        raise ApiError(400, "idempotency_key_required", "Missing Idempotency-Key header.")
+    if not IDEMPOTENCY_KEY_MIN_LENGTH <= len(idempotency_key) <= IDEMPOTENCY_KEY_MAX_LENGTH:
+        raise ApiError(
+            400,
+            "idempotency_key_invalid",
+            "Idempotency-Key must be 8 to 128 characters long.",
+            {"min_length": IDEMPOTENCY_KEY_MIN_LENGTH, "max_length": IDEMPOTENCY_KEY_MAX_LENGTH},
+        )
+    return idempotency_key
