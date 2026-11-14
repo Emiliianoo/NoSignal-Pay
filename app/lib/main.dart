@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'core/api_client.dart';
@@ -10,6 +11,7 @@ import 'providers/wallet_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
+import 'screens/splash_screen.dart';
 
 /// Set with `flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000`.
 /// The default works on the iPhone simulator; see CLAUDE.md for the others.
@@ -51,8 +53,15 @@ class NoSignalApp extends StatelessWidget {
       title: 'NoSignal',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
-      initialRoute: Routes.login, // step 5 changes this to the splash
+      // Dark status bar icons on every screen; the splash (dark background)
+      // overrides this with white icons while it is visible.
+      builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: child!,
+      ),
+      initialRoute: Routes.splash,
       routes: {
+        Routes.splash: (_) => const SplashScreen(),
         Routes.login: (_) => const LoginScreen(),
         Routes.home: (_) => const HomeScreen(),
         Routes.register: (_) => const RegisterScreen(),
