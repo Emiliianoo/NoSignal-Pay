@@ -16,7 +16,11 @@ enum AuthStatus {
 /// calls the auth endpoints of [ApiClient]. Screens read [status], [user],
 /// [isLoading] and [errorCode], and call the methods below.
 class AuthProvider extends ChangeNotifier {
-  AuthProvider({required this._api, required this._tokenStorage}) {
+  AuthProvider({
+    required this._api,
+    required this._tokenStorage,
+    this.onSignedOut,
+  }) {
     // A request with a token got a 401: the token expired or is no longer
     // valid, so the session is over.
     _api.onUnauthorized = _endSession;
@@ -24,6 +28,10 @@ class AuthProvider extends ChangeNotifier {
 
   final ApiClient _api;
   final TokenStorage _tokenStorage;
+
+  /// Runs every time the session ends (logout or expired token). main.dart
+  /// uses it to clear the other providers.
+  final VoidCallback? onSignedOut;
 
   AuthStatus _status = AuthStatus.unknown;
   User? _user;
@@ -90,7 +98,6 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> logout() async {
-    // Later: call clear() on WalletProvider, ChargeProvider and PaymentProvider.
     _errorCode = null;
     await _endSession();
   }
@@ -128,6 +135,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> _endSession() async {
     await _tokenStorage.delete();
+    onSignedOut?.call();
     _setSignedOut();
   }
 

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../models/user.dart';
+import '../models/wallet.dart';
 import 'api_exception.dart';
 
 /// Returns the saved access token, or null when nobody is signed in.
@@ -63,6 +64,12 @@ class ApiClient {
 
   Future<User> getMe() {
     return _send(() => _dio.get('/users/me'), User.fromJson);
+  }
+
+  // ---------- wallet ----------
+
+  Future<Wallet> getWallet() {
+    return _send(() => _dio.get('/wallet'), Wallet.fromJson);
   }
 
   // ---------- internals ----------

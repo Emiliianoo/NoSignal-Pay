@@ -1,61 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nosignal_pay/core/api_client.dart';
 import 'package:nosignal_pay/core/api_exception.dart';
 import 'package:nosignal_pay/core/token_storage.dart';
 import 'package:nosignal_pay/models/user.dart';
 import 'package:nosignal_pay/providers/auth_provider.dart';
 
-final ana = User(
-  id: '3f2a9c1e-5b7d-4e8a-9c21-7d4e5f6a8b90',
-  email: 'ana@example.com',
-  displayName: 'Ana',
-  createdAt: DateTime.utc(2026, 11, 13),
-);
-
-ApiException apiError(int? status, String code) =>
-    ApiException(statusCode: status, code: code, message: '');
-
-/// An ApiClient that never touches the network: each test decides what the
-/// auth calls return or throw.
-class FakeApiClient extends ApiClient {
-  FakeApiClient()
-    : super(baseUrl: 'http://api.test', readToken: () async => null);
-
-  Object? loginResult; // an AuthResult or an ApiException
-  Object? meResult; // a User or an ApiException
-  int loginCalls = 0;
-
-  @override
-  Future<AuthResult> login({
-    required String email,
-    required String password,
-  }) async {
-    loginCalls++;
-    return _resultOrThrow(loginResult);
-  }
-
-  @override
-  Future<AuthResult> register({
-    required String email,
-    required String password,
-    required String displayName,
-  }) async => _resultOrThrow(loginResult);
-
-  @override
-  Future<User> getMe() async {
-    final result = meResult;
-    if (result is ApiException && result.statusCode == 401) {
-      onUnauthorized?.call(); // what the real interceptor does
-    }
-    return _resultOrThrow(meResult);
-  }
-
-  T _resultOrThrow<T>(Object? result) {
-    if (result is ApiException) throw result;
-    return result as T;
-  }
-}
+import '../support/fakes.dart';
 
 void main() {
   late FakeApiClient api;

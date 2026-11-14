@@ -17,6 +17,7 @@ class AppTextField extends StatelessWidget {
     this.autofillHints,
     this.obscureText = false,
     this.enabled = true,
+    this.onChanged,
     this.onSubmitted,
   });
 
@@ -33,6 +34,7 @@ class AppTextField extends StatelessWidget {
   final Iterable<String>? autofillHints;
   final bool obscureText;
   final bool enabled;
+  final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
 
   @override
@@ -51,6 +53,7 @@ class AppTextField extends StatelessWidget {
           autofillHints: autofillHints,
           obscureText: obscureText,
           enabled: enabled,
+          onChanged: onChanged,
           onSubmitted: onSubmitted,
           autocorrect:
               !obscureText && keyboardType != TextInputType.emailAddress,
