@@ -19,7 +19,12 @@ enum AppIcons {
   copy(
     'M9 9h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10a1 1 0 0 1 1-1zM16 5V4a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h1',
   ),
-  logout('M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M16 16l4-4-4-4M20 12H10');
+  logout('M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M16 16l4-4-4-4M20 12H10'),
+
+  /// Wi-Fi with a slash, from Result.dc.html.
+  noSignal(
+    'M4 4l16 16M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 5.2-2.7M19 13a10 10 0 0 0-3.4-2.2M2 9.5a15 15 0 0 1 4.6-3M22 9.5a15 15 0 0 0-11.3-3.9M12 20h.01',
+  );
 
   const AppIcons(this.path);
 
@@ -27,11 +32,20 @@ enum AppIcons {
 }
 
 class AppIcon extends StatelessWidget {
-  const AppIcon(this.icon, {super.key, this.size = 24, required this.color});
+  const AppIcon(
+    this.icon, {
+    super.key,
+    this.size = 24,
+    required this.color,
+    this.strokeWidth = 1.75,
+  });
 
   final AppIcons icon;
   final double size;
   final Color color;
+
+  /// In 24-grid units, so it scales with [size] like the design's SVGs.
+  final double strokeWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +53,7 @@ class AppIcon extends StatelessWidget {
     return ExcludeSemantics(
       child: SvgPicture.string(
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-        'stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'
+        'stroke-width="$strokeWidth" stroke-linecap="round" stroke-linejoin="round">'
         '<path d="${icon.path}"/></svg>',
         width: size,
         height: size,

@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import '../models/payment_request.dart';
+import '../models/transaction_item.dart';
 import '../models/user.dart';
 import '../models/wallet.dart';
 import 'api_exception.dart';
@@ -70,6 +72,31 @@ class ApiClient {
 
   Future<Wallet> getWallet() {
     return _send(() => _dio.get('/wallet'), Wallet.fromJson);
+  }
+
+  // ---------- payments ----------
+
+  Future<PaymentRequest> getPaymentRequest(String id) {
+    return _send(
+      () => _dio.get('/payment-requests/$id'),
+      PaymentRequest.fromJson,
+    );
+  }
+
+  /// Pays a charge. Sends only its id, never an amount. The caller keeps
+  /// [idempotencyKey] and sends the same one on every retry.
+  Future<MoneyOperation> pay({
+    required String paymentRequestId,
+    required String idempotencyKey,
+  }) {
+    return _send(
+      () => _dio.post(
+        '/payments',
+        data: {'payment_request_id': paymentRequestId},
+        options: Options(headers: {'Idempotency-Key': idempotencyKey}),
+      ),
+      MoneyOperation.fromJson,
+    );
   }
 
   // ---------- internals ----------
