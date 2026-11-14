@@ -7,10 +7,14 @@ import 'core/routes.dart';
 import 'core/theme.dart';
 import 'core/token_storage.dart';
 import 'providers/auth_provider.dart';
+import 'providers/payment_provider.dart';
 import 'providers/wallet_provider.dart';
+import 'screens/confirm_payment_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/payment_result_screen.dart';
 import 'screens/register_screen.dart';
+import 'screens/scan_screen.dart';
 import 'screens/splash_screen.dart';
 
 /// Set with `flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000`.
@@ -24,10 +28,15 @@ void main() {
   final tokenStorage = TokenStorage();
   final api = ApiClient(baseUrl: apiBaseUrl, readToken: tokenStorage.read);
   final wallet = WalletProvider(api: api);
+  final payment = PaymentProvider(api: api);
   final auth = AuthProvider(
     api: api,
     tokenStorage: tokenStorage,
-    onSignedOut: wallet.clear, // the next user must not see this balance
+    // The next user must not see this balance or a half-finished payment.
+    onSignedOut: () {
+      wallet.clear();
+      payment.clear();
+    },
   );
 
   runApp(
@@ -38,6 +47,7 @@ void main() {
       providers: [
         ChangeNotifierProvider.value(value: auth),
         ChangeNotifierProvider.value(value: wallet),
+        ChangeNotifierProvider.value(value: payment),
       ],
       child: const NoSignalApp(),
     ),
@@ -65,6 +75,9 @@ class NoSignalApp extends StatelessWidget {
         Routes.login: (_) => const LoginScreen(),
         Routes.home: (_) => const HomeScreen(),
         Routes.register: (_) => const RegisterScreen(),
+        Routes.payScan: (_) => const ScanScreen(),
+        Routes.payConfirm: (_) => const ConfirmPaymentScreen(),
+        Routes.payResult: (_) => const PaymentResultScreen(),
       },
     );
   }

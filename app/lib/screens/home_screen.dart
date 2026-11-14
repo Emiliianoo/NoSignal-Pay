@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pushNamedAndRemoveUntil(context, Routes.login, (_) => false);
   }
 
-  // Temporary until the charge, pay and top-up screens exist.
+  // Temporary until the charge and top-up screens exist.
   void _comingSoon() {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 32),
               _BalanceCard(
                 onCharge: _comingSoon,
-                onPay: _comingSoon,
+                onPay: () => Navigator.pushNamed(context, Routes.payScan),
                 onTopUp: _comingSoon,
               ),
               const SizedBox(height: 32),
