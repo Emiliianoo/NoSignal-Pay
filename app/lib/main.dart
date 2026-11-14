@@ -9,6 +9,7 @@ import 'providers/auth_provider.dart';
 import 'providers/wallet_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/register_screen.dart';
 
 /// Set with `flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000`.
 /// The default works on the iPhone simulator; see CLAUDE.md for the others.
@@ -54,11 +55,7 @@ class NoSignalApp extends StatelessWidget {
       routes: {
         Routes.login: (_) => const LoginScreen(),
         Routes.home: (_) => const HomeScreen(),
-        // Temporary until RegisterScreen exists (step 4).
-        Routes.register: (_) => Scaffold(
-          appBar: AppBar(),
-          body: const Center(child: Text('Registro: paso 4')),
-        ),
+        Routes.register: (_) => const RegisterScreen(),
       },
     );
   }

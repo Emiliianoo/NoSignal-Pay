@@ -25,6 +25,7 @@ class FakeApiClient extends ApiClient {
   Object? meResult; // a User or an ApiException
   Object? walletResult; // a Wallet or an ApiException
   int loginCalls = 0;
+  String? registeredName; // what the last register call sent
 
   /// When set, login and register wait for it, so a test can look at the
   /// screen while the request is still on its way.
@@ -46,6 +47,7 @@ class FakeApiClient extends ApiClient {
     required String password,
     required String displayName,
   }) async {
+    registeredName = displayName;
     await gate?.future;
     return _resultOrThrow(loginResult);
   }
