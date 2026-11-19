@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +17,9 @@ import 'screens/register_screen.dart';
 import 'screens/scan_screen.dart';
 import 'screens/splash_screen.dart';
 
-/// Set with `flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000`.
-/// The default works on the iPhone simulator; see CLAUDE.md for the others.
+/// Set with `flutter run --dart-define=API_BASE_URL=<url>`.
+/// The default works on the iPhone simulator. Use `http://10.0.2.2:8000` on
+/// the Android emulator and `http://<laptop-ip>:8000` on a physical phone.
 const apiBaseUrl = String.fromEnvironment(
   'API_BASE_URL',
   defaultValue: 'http://localhost:8000',

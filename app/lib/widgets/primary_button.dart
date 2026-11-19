@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The main action of a screen: full width, 56 high, accent background.
 /// Colors, height and radius come from `filledButtonTheme` in theme.dart.
